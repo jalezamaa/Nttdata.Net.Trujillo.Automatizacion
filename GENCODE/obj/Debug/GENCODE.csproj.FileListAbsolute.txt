@@ -1,0 +1,10 @@
+C:\GENCODE\GENCODE\GENCODE\bin\Debug\GENCODE.exe.config
+C:\GENCODE\GENCODE\GENCODE\bin\Debug\GENCODE.exe
+C:\GENCODE\GENCODE\GENCODE\bin\Debug\GENCODE.pdb
+C:\GENCODE\GENCODE\GENCODE\obj\Debug\GENCODE.csprojResolveAssemblyReference.cache
+C:\GENCODE\GENCODE\GENCODE\obj\Debug\GENCODE.Form1.resources
+C:\GENCODE\GENCODE\GENCODE\obj\Debug\GENCODE.Properties.Resources.resources
+C:\GENCODE\GENCODE\GENCODE\obj\Debug\GENCODE.csproj.GenerateResource.Cache
+C:\GENCODE\GENCODE\GENCODE\obj\Debug\GENCODE.exe
+C:\GENCODE\GENCODE\GENCODE\obj\Debug\GENCODE.pdb
+C:\GENCODE\GENCODE\GENCODE\obj\Debug\GENCODE.Variables.resources
