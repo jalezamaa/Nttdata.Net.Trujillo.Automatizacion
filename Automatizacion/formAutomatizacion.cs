@@ -13,10 +13,11 @@ namespace Automatizacion
 {
     public partial class formAutomatizacion : Form
     {
-        List<ListaVariablesRequest> listVariablesRequest = new List<ListaVariablesRequest>();
-        List<ListaVariablesResponse> listVariablesResponse = new List<ListaVariablesResponse>();
-        List<ListaDeVariablesTipoListaRequest> listDeVariablesTipoListaRequest = new List<ListaDeVariablesTipoListaRequest>();
-        List<ListaDeVariablesTipoListaResponse> listListaDeVariablesTipoListaResponse = new List<ListaDeVariablesTipoListaResponse>();
+        public static List<Variables> listVariablesRequest = new List<Variables>();
+        public static List<Variables> listVariablesResponse = new List<Variables>();
+        public static List<Variables> listDeVariablesTipoListaRequest = new List<Variables>();
+        public static List<Variables> listListaDeVariablesTipoListaResponse = new List<Variables>();
+        public static int tipoClaseProcesoMasivo;
         string rutaArchivo = string.Empty;
         FolderBrowserDialog dlg = new FolderBrowserDialog();
 
@@ -50,12 +51,17 @@ namespace Automatizacion
                 return;
             }
             //ValidarNombres(txtNombreVariableRequest.Text) == false ? return; : return);
-            ListaVariablesRequest listadoVariablesRequest = new ListaVariablesRequest();
+            Variables listadoVariablesRequest = new Variables();
             listadoVariablesRequest.nombreVariable = txtNombreVariableRequest.Text;
             listadoVariablesRequest.tipoVariable = cmbTipoVariableRequest.SelectedItem.ToString();
             listVariablesRequest.Add(listadoVariablesRequest);
-            dgvVariablesRequest.DataSource = null;
+            dgvVariablesRequest.DataSource = new List<Variables>();
             dgvVariablesRequest.DataSource = listVariablesRequest;
+            ColocarBotonEliminarEnGrid(dgvVariablesRequest);
+            //BindingSource source = new BindingSource();
+            //source.DataSource = listVariablesRequest;
+            //dgvVariablesRequest.DataSource = source;
+            //dgvVariablesRequest.ResetBindings();
 
             if (txtNombreVariableRequest.Text != String.Empty)
             {
@@ -84,12 +90,13 @@ namespace Automatizacion
             {
                 return;
             }
-            ListaVariablesResponse listadoVariablesResponse = new ListaVariablesResponse();
+            Variables listadoVariablesResponse = new Variables();
             listadoVariablesResponse.nombreVariable = txtNombreVariableResponse.Text;
             listadoVariablesResponse.tipoVariable = cbmTipoVariableResponse.SelectedItem.ToString();
             listVariablesResponse.Add(listadoVariablesResponse);
-            dgvVariablesResponse.DataSource = null;
+            dgvVariablesResponse.DataSource = new List<Variables>();
             dgvVariablesResponse.DataSource = listVariablesResponse;
+            ColocarBotonEliminarEnGrid(dgvVariablesResponse);
 
             if (cbmTipoVariableResponse.SelectedIndex == 2 && txtNombreVariableResponse.Text != String.Empty)
             {
@@ -625,7 +632,7 @@ namespace Automatizacion
                     {
                         nombreClaseRequestBE = "Lista" + txtNombreClaseRequest.Text;
                         codigoBodyRequest += "        [DataMember(Name = \"" + row.Cells[0].Value.ToString() + "\")]" + Environment.NewLine;
-                        codigoBodyRequest += "        public List<" + row.Cells[0].Value.ToString() + ">" + row.Cells[0].Value.ToString() + "{ get; set; }" + Environment.NewLine;
+                        codigoBodyRequest += "        public List<" + row.Cells[0].Value.ToString() + "> " + row.Cells[0].Value.ToString() + " { get; set; }" + Environment.NewLine;
                     }
                     else if (row.Cells[1].Value.ToString() == "Object")
                     {
@@ -639,6 +646,7 @@ namespace Automatizacion
                     }
                     else
                     {
+                        nombreClaseRequestBE = "BodyRequest" + txtNombreClaseRequest.Text;
                         codigoBodyRequest += "        [DataMember(Name = \"" + row.Cells[0].Value.ToString() + "\")]" + Environment.NewLine;
                         codigoBodyRequest += "        public " + row.Cells[1].Value.ToString().ToLower() + " " + row.Cells[0].Value.ToString() + " { get; set; }" + Environment.NewLine;
                     }
@@ -794,7 +802,7 @@ namespace Automatizacion
                 codigoBEresponseData += "{" + Environment.NewLine;
                 codigoBEresponseData += "    [System.Serializable()]" + Environment.NewLine;
                 codigoBEresponseData += "    [DataContract]" + Environment.NewLine;
-                codigoBEresponseData += "    public class BEresponseStatus" + Environment.NewLine;
+                codigoBEresponseData += "    public class BEresponseData" + Environment.NewLine;
                 codigoBEresponseData += "    {" + Environment.NewLine;
                 foreach (DataGridViewRow row in dgvVariablesResponse.Rows)
                 {
@@ -802,7 +810,7 @@ namespace Automatizacion
                     {
                         //nombreDataResponsetBE = "Lista" + txtNombreClaseRequest.Text;
                         codigoBEresponseData += "        [DataMember(Name = \"" + row.Cells[0].Value.ToString() + "\")]" + Environment.NewLine;
-                        codigoBEresponseData += "        public List<" + row.Cells[0].Value.ToString() + ">" + row.Cells[0].Value.ToString() + "{ get; set; }" + Environment.NewLine;
+                        codigoBEresponseData += "        public List<" + row.Cells[0].Value.ToString() + "> " + row.Cells[0].Value.ToString() + " { get; set; }" + Environment.NewLine;
                     }
                     else if (row.Cells[1].Value.ToString() == "Object")
                     {
@@ -1007,14 +1015,15 @@ namespace Automatizacion
             {
                 return;
             }
-            ListaDeVariablesTipoListaRequest listadoDeVariablesTipoListaRequest = new ListaDeVariablesTipoListaRequest();
+            Variables listadoDeVariablesTipoListaRequest = new Variables();
             listadoDeVariablesTipoListaRequest.nombreVariable = txtNombreVariableListaRequest.Text;
             listadoDeVariablesTipoListaRequest.tipoVariable = cmbTipoVariableListaRequest.SelectedItem.ToString();
             listDeVariablesTipoListaRequest.Add(listadoDeVariablesTipoListaRequest);
-            dgvVariablesListaRequest.DataSource = null;
-            dgvVariablesListaRequest.DataSource = listDeVariablesTipoListaRequest;
             txtNombreVariableListaRequest.Text = string.Empty;
             cmbTipoVariableListaRequest.SelectedIndex = 0;
+            dgvVariablesListaRequest.DataSource = new List<Variables>();
+            dgvVariablesListaRequest.DataSource = listDeVariablesTipoListaRequest;
+            ColocarBotonEliminarEnGrid(dgvVariablesListaRequest);
 
         }
 
@@ -1028,14 +1037,145 @@ namespace Automatizacion
             {
                 return;
             }
-            ListaDeVariablesTipoListaResponse listadoListaDeVariablesTipoListaResponse = new ListaDeVariablesTipoListaResponse();
+            Variables listadoListaDeVariablesTipoListaResponse = new Variables();
             listadoListaDeVariablesTipoListaResponse.nombreVariable = txtNombreVariablesListaResponse.Text;
             listadoListaDeVariablesTipoListaResponse.tipoVariable = cmbTipoVariableListaResponse.SelectedItem.ToString();
             listListaDeVariablesTipoListaResponse.Add(listadoListaDeVariablesTipoListaResponse);
-            dgvVariablesListaResponse.DataSource = null;
-            dgvVariablesListaResponse.DataSource = listListaDeVariablesTipoListaResponse;
             txtNombreVariablesListaResponse.Text = string.Empty;
             cmbTipoVariableListaResponse.SelectedIndex = 0;
+            dgvVariablesListaResponse.DataSource = new List<Variables>();
+            dgvVariablesListaResponse.DataSource = listListaDeVariablesTipoListaResponse;
+            ColocarBotonEliminarEnGrid(dgvVariablesListaResponse);
+        }
+
+        private void btnAddVariablesRequestMasivo_Click(object sender, EventArgs e)
+        {
+            ProcesarJsonMasivo(1);
+        }
+
+        private void btnAddVariablesResponseMasivo_Click(object sender, EventArgs e)
+        {
+            ProcesarJsonMasivo(2);
+        }
+
+        private void ProcesarJsonMasivo(int tipoClase)
+        {
+            tipoClaseProcesoMasivo = tipoClase;
+
+            using (var frmInputJson = new InputJson())
+            {
+                var result = frmInputJson.ShowDialog();
+                if (result != DialogResult.OK)
+                {
+                    return;
+                }
+            }
+
+            switch (tipoClase)
+            {
+                case 1:  // request
+                    dgvVariablesRequest.DataSource = new List<Variables>();
+                    dgvVariablesRequest.DataSource = listVariablesRequest;
+                    ColocarBotonEliminarEnGrid(dgvVariablesRequest);
+
+                    if (listDeVariablesTipoListaRequest.Count > 0)
+                    {
+                        gbVariableListaRequest.Visible = true; // debe ir antes del databinding
+                        dgvVariablesListaRequest.DataSource = new List<Variables>();
+                        dgvVariablesListaRequest.DataSource = listDeVariablesTipoListaRequest;
+                        ColocarBotonEliminarEnGrid(dgvVariablesListaRequest);
+                    }
+                    break;
+
+                case 2: // response
+                    dgvVariablesResponse.DataSource = new List<Variables>();
+                    dgvVariablesResponse.DataSource = listVariablesResponse;
+                    ColocarBotonEliminarEnGrid(dgvVariablesResponse);
+
+                    if (listListaDeVariablesTipoListaResponse.Count > 0)
+                    {
+                        gbVariableListaResponse.Visible = true;
+                        dgvVariablesListaResponse.DataSource = new List<Variables>();
+                        dgvVariablesListaResponse.DataSource = listListaDeVariablesTipoListaResponse;
+                        ColocarBotonEliminarEnGrid(dgvVariablesListaResponse);
+                    }
+                    break;
+            }
+
+        }
+
+        public void ColocarBotonEliminarEnGrid(DataGridView grid)
+        {
+            if (grid.Columns["dataGridViewDeleteButton"] != null)
+            {
+                grid.Columns.Remove("dataGridViewDeleteButton");
+            }
+
+            var deleteButton = new DataGridViewButtonColumn();
+            deleteButton.Name = "dataGridViewDeleteButton";
+            deleteButton.HeaderText = "";
+            deleteButton.Text = "X";
+            deleteButton.Width = 25;
+            deleteButton.UseColumnTextForButtonValue = true;
+            grid.Columns.Add(deleteButton);
+        }
+
+        private void BorrarFilaCallback(object sender, DataGridViewCellEventArgs eventArgs)
+        {
+            if (eventArgs.RowIndex == dgvVariablesRequest.NewRowIndex || eventArgs.RowIndex < 0)
+                return;
+
+            var grid = (DataGridView) sender;
+            if (eventArgs.ColumnIndex == grid.Columns["dataGridViewDeleteButton"].Index)
+            {
+                List<Variables> listaVariables = new List<Variables>();
+                Int32 indexFilaEliminada = grid.CurrentRow.Index;
+
+                switch (grid.Name)
+                {
+                    case "dgvVariablesRequest":
+                        listaVariables = listVariablesRequest;
+                        break;
+                    case "dgvVariablesListaRequest":
+                        listaVariables = listDeVariablesTipoListaRequest;
+                        break;
+                    case "dgvVariablesResponse":
+                        listaVariables = listVariablesResponse;
+                        break;
+                    case "dgvVariablesListaResponse":
+                        listaVariables = listListaDeVariablesTipoListaResponse;
+                        break;
+                }
+
+                listaVariables.RemoveAt(indexFilaEliminada);
+                grid.DataSource = new List<Variables>();
+                grid.DataSource = listaVariables;
+            }
+        }
+
+        private void dgvVariablesRequest_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            BorrarFilaCallback(sender, e);
+        }
+
+        private void dgvVariablesListaRequest_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            BorrarFilaCallback(sender, e);
+        }
+
+        private void dgvVariablesResponse_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            BorrarFilaCallback(sender, e);
+        }
+
+        private void dgvVariablesListaResponse_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            BorrarFilaCallback(sender, e);
+        }
+
+        private void formAutomatizacion_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Application.ExitThread();
         }
     }
 }
